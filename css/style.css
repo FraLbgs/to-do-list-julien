@@ -1,0 +1,47 @@
+/* thing to do: root, 
+--main-color etc. */ 
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: rgb(160, 79, 112); 
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    color: lightpink;
+    min-height: 100vh;
+}
+
+header{
+    font-size: 1.5rem;
+}
+
+header, 
+.adding-tasks{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 10vh;
+}
+
+.to-do-input,
+.to-do-button {
+    padding: .5rem;
+    font-size: 2rem;
+    border: none;
+    background: white;
+}
+
+.to-do-button {
+    cursor: pointer;
+    color: rgb(160, 79, 112);
+    transition: all 0.3s ease;
+}
+
+.to-do-button:hover{
+    background: rgb(160, 79, 112);
+    color: lightpink;
+}
