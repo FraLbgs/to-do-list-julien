@@ -18,10 +18,16 @@ toDoButton.addEventListener("click", addThingsToDo)
 /* now, create a function without panic */
 
 function addThingsToDo(event) {
-    const taskContent = document.createElement("div");
-    taskContent.classList.add("to-do");
 
-    const newTask = document.createElement("li");
-    newTask.innerText = "hello world!";
-    newTask.classList.add("to-do-item")
+  const toDoDiv = document.createElement("div");
+  toDoDiv.classList.add("to-do");
+
+  const newTodo = document.createElement("li");
+  newTodo.innerText = toDoInput.value;
+  newTodo.classList.add("to-do-item");
+  toDoDiv.appendChild(newTodo);
+
+  toDoList.appendChild(toDoDiv);
+  toDoInput.value = "";
 }
+
