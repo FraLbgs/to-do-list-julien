@@ -13,7 +13,7 @@ abstract class Model {
         try {
             self::$connection = new PDO(
                 'mysql:host=localhost;dbname=to_do_list;charset=utf8',
-                'Julien',
+                'Franck',
                 'onsenfout'
             );
             self::$connection->setAttribute(

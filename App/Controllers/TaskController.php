@@ -39,13 +39,21 @@ class TaskController {
         if ($classUl) $classUl = " class=\"$classUl\"";
         if ($classLi) $classLi = " class=\"$classLi\"";
         $valueToLi = function ($v){
-            $taskItem = new TaskItem($v);
+            $taskItem = new TaskItem([
+                'color' => $v['color'],
+                'description' => $v['description'],
+                'date' => $v['date_reminder'],
+                'themes' => $v['themes'],
+                'id_task' => $v['id_tasks'],
+                'verifyDate' => self::verifyDate($v['date_reminder'])
+            ]);
+            // $taskItem = new TaskItem($v);
             return $taskItem->getHtml();
         };
         return "<ul$classUl>" . implode("", array_map($valueToLi, $array)) . "</ul>";
         }
     
-        public function verifyDate(string $d) :string {
+        public static function verifyDate(string $d) :string {
             if($d === date("Y-m-d")) return "Dernier délai : Aujourd'hui";
             return "";
         }
