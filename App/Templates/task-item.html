@@ -1,0 +1,17 @@
+<li class='task' style='background-color: #{{color}}'><div class='list-content'>
+<div class='left-content'><div class='up-down'>
+    <a class='up' href='action.php?action=up&idtask={{id_task}}'><img title='Monter la priorité' class='img-up-down' src='img/up.png' alt='up'></a>
+    <a class='down' href='action.php?action=down&idtask={{id_task}}'><img title='Descendre la priorité' class='img-up-down' src='img/down.png' alt='up'></a>
+</div>
+<div>
+    <p class='desc'>{{description}}</p>
+    <p class='desc'>{{date}}</p>
+    <p class='desc'>{{themes}}</p>
+</div>
+</div>
+<div class='date-alert'>{{verifyDate}}</div>
+<div class='links'>
+    <a class='link' href ='modify.php?action=modify&idtask={{id_task}}'><img title='Modifier' class='img-link' src='img/modif.png' alt='modifier'></a>
+    <a class='link' href ='action.php?action=delete&idtask={{id_task}}'><img title='Supprimer' class='img-link' src='img/cross.png' alt='supprimer'></a>
+    <a class='link' href ='action.php?action=done&idtask={{id_task}}'><img title='Terminer' class='img-link' src='img/check.png' alt='terminer'></a>
+</div></li>

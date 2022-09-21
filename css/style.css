@@ -1,56 +1,201 @@
-/* thing to do: root, 
---main-color etc. */ 
-
-
+@import url(font-awesome.min.css);
 * {
-    margin: 0;
     padding: 0;
+    margin: 0;
     box-sizing: border-box;
 }
 
-body{
-    background-color: rgb(160, 79, 112); 
-    font-family:Georgia, 'Times New Roman', Times, serif;
-    color: lightpink;
-    min-height: 100vh;
+a{
+    text-decoration: none;
+    color :black;
 }
 
-header{
-    font-size: 1.5rem;
+ul{
+    list-style: none;
 }
 
-header, 
-.adding-tasks{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 10vh;
-}
-
-.to-do-input,
-.to-do-button {
-    padding: .5rem;
-    font-size: 2rem;
+/* button {
     border: none;
-    background: white;
+    background: none;
+    width: 50px;
+} */
+
+body{
+    /* margin: 0 5px; */
+    margin: 0 auto;
+    max-width: 900px;
+    background-color: rgba(200,200,200,0.3);
 }
 
-.to-do-button {
-    cursor: pointer;
-    color: rgb(160, 79, 112);
+.header{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px;
+    height: 100px;
+    background-color: darkseagreen;
+}
+
+.title {
+    font-size: 50px;
+    color: darkcyan;
+}
+
+.nav-list{
+    display: flex;
+}
+
+.nav-item{
+    padding: 0 12px;
+    text-shadow: 5px 3px 3px grey;
     transition: all 0.3s ease;
 }
 
-.to-do-button:hover{
-    background: rgb(160, 79, 112);
-    color: lightpink;
+.nav-item:hover{
+    scale: 1.1;
+    transition: all 0.3s ease;
+}
+
+.nav-link{
+    font-size: 20px;
+    color: mistyrose;
+}
+
+.container{
+    margin-top: 20px;
+}
+
+.hidden{
+    text-align: center;
+    color: red;
+    background-color: rgba(128, 128, 128, 0.4);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* .sub-ttl{
+
+} */
+
+.tasks, .done-ul{
+    margin: 5px 0;
+}
+
+.task, .done-li{
+padding: 5px;
+margin: 2px 0;
+height: 50px;
+}
+
+.list-content{
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* .up-down{
+    display: flex;
+    flex-direction: column;
+} */
+
+.left-content{
+    display: flex;
+    align-items: center;
+}
+
+.up, .down{
+    display: block;
+}
+
+.img-up-down{
+    width: 15px;
+}
+
+.desc{
+    padding-left: 10px;
+}
+
+.date-alert{
+    display: flex;
+    align-items: center;
+    color: red;
+    font-weight: bold;
+}
+
+.links{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.link{
+    display: block;
+    /* border: solid black 1px;
+    border-radius: 10px; */
+    padding: 2px 5px;
+    height: 100%;
+}
+
+.img-link{
+    height: 100%;
+}
+
+.new-task, .content-btn{
+    text-align: right;
+    margin-top: 10px;
+}
+
+.link-new-task, .btn-return{
+    padding: 3px;
+    border-radius: 5px;
+    border: solid rgba(128, 128, 128, 0.6) 2px;
+    text-decoration: none;
+    color: black;
+    background-color: rgba(128, 128, 128, 0.4);
+    box-shadow: 3px 3px 10px grey;
+}
+
+.form{
+    background-color: rgba(128, 128, 128, 0.3);
+}
+
+.field{
+    padding: 10px;
 }
 
 
+.label{
+    display: block;
+    font-size: 18px;
+}
 
+.input{
+    display: block;
+    width: 100%;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 5px;
+}
 
-.to-do {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.add-theme{
+    /* border: 1px solid black; */
+    border-radius: 50%;
+    width: 18px;
+    /* background-color: grey; */
+}
+
+.form-err{
+    color: red;
+}
+
+.tasks-done{
+    margin-top: 30px;
+}
+
+.done-li{
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    height: 30px;
+    background-color: rgb(217, 194, 194);
 }

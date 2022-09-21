@@ -1,0 +1,21 @@
+<div class="container">
+    <h2 class="sub-ttl">Veuillez rentrer les données : </h2>
+    <form class="form" method="post" action="">
+      <div class="field">
+        <label class="label">Description : {{test-description}}<br>
+          <input class="input" type="text" name="description" required></label>
+      </div>
+      <div class="field"><label class="label">Date de rappel : {{test-date}}<br>
+          <input class="input" type="date" name="date" required></label>
+      </div>
+      <div class="field"><label class="label">Couleur : {{test-color}}<br>
+          <input class="input" type="color" name="color" value="#ffffff" required></label>
+      </div>
+      <div class="field">
+        {{display-themes}}
+      </div>
+      <div class="field">
+        <input class="input" type="submit" name="submit" value="Valider les données">
+      </div>
+    </form>
+  </div>
