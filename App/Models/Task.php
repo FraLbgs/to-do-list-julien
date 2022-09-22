@@ -35,9 +35,52 @@ class Task extends Model {
         $query2->execute($array);
     }
 
-    public static function getLastId(){
-        var_dump(self::$connection->lastInsertId());
+    public static function getLastId() :string {
         return self::$connection->lastInsertId();
+    }
+
+    public static function getPrio(int $id) :string {
+        // var_dump($array);
+        $query = self::$connection->prepare("SELECT priority FROM tasks WHERE id_tasks = :idtask AND done = 0;");
+        $query->execute(["idtask" => $id]);
+        $res = $query->fetch();
+        return intval($res["priority"]);
+    }
+
+    public static function validateTask(int $id) :void {
+        // var_dump($array);
+        $prio = self::getPrio($id);
+        $query1 = self::$connection->prepare("UPDATE tasks
+        SET done = 1, priority = 0
+        WHERE id_tasks = :idtask;");
+        $isDone = $query1->execute(["idtask" => $id]);
+
+        $query2 = self::$connection->prepare("UPDATE tasks
+        SET priority = priority-1
+        WHERE priority > $prio AND done = 0;");
+        $isDone2 = $query2->execute();
+
+        $action = "done";
+
+    }
+
+    public static function delete(int $id):void {
+        $prio = self::getPrio($id);
+
+        $query = self::$connection->prepare("DELETE FROM have_theme
+        WHERE id_tasks = :idtask;");
+        $query->execute(["idtask" => $id]);
+
+        $query1 = self::$connection->prepare("DELETE FROM tasks
+        WHERE id_tasks = :idtask;");
+        $isDone = $query1->execute(["idtask" => $id]);
+
+        $query2 = self::$connection->prepare("UPDATE tasks
+        SET priority = priority-1
+        WHERE priority > $prio AND done = 0;");
+        $isDone2 = $query2->execute();
+
+        $action = "delete";
     }
     
 }

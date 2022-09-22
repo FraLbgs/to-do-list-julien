@@ -13,6 +13,12 @@ if(isset($_GET['action']) && $_GET['action'] === 'create') {
     $controller->checkForm();
     $controller->store();
     exit;
+} else if(isset($_GET['action']) && $_GET['action'] === "done" && isset($_GET['idtask'])){
+    $controller->done();
+}
+
+else if(isset($_GET['action']) && $_GET['action'] === "delete" && isset($_GET['idtask'])){
+    $controller->destroy();
 }
 
 $controller->index();

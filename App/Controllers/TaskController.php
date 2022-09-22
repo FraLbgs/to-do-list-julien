@@ -140,6 +140,29 @@ class TaskController {
     }
 
     // -------------------------------------------------------------------------------
+    
+    public function getIdTaskPrio(){
+        if (isset($_GET['idtask'])){
+            $newTask = new Task;
+            $newTask->getPrio($_GET['idtask']);
+        }
+    }
+
+    public function done(){
+        if (isset($_GET['idtask'])){
+            $newTask = new Task;
+            $newTask->validateTask($_GET['idtask']);
+            header("location:index.php");
+        }
+    }
+
+    public function destroy(){
+        if (isset($_GET['idtask'])){
+            $newTask = new Task;
+            $newTask->delete($_GET['idtask']);
+            header("location:index.php");
+        }
+    }
 
 
 }
