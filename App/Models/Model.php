@@ -25,6 +25,8 @@ abstract class Model {
                 " . $e->getMessage());
         }
     }
+
+    
 }
 
 

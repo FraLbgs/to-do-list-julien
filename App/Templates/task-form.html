@@ -11,7 +11,7 @@
 
 <body>
   <header class="header">
-    <h1 class="title">To Do List</h1>
+    <h1 class="title">{{title}}</h1>
     <nav>
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link" href='index.php'>Accueil</a></li>
@@ -23,16 +23,16 @@
 
   <div class="container">
     <h2 class="sub-ttl">Veuillez rentrer les données : </h2>
-    <form class="form" method="post" action="">
+    <form class="form" method="post" action="index.php?action=add">
       <div class="field">
-        <label class="label">Description : {{test-description}}<br>
+        <label class="label">Description : <span class='form-err'>{{test-description}}</span><br><br>
           <input class="input" type="text" name="description" value="{{description}}" required></label>
       </div>
-      <div class="field"><label class="label">Date de rappel : {{test-date}}<br>
-          <input class="input" type="date" name="date" value="{{description}}" required></label>
+      <div class="field"><label class="label">Date de rappel : <span class='form-err'>{{test-date}}</span><br><br>
+          <input class="input" type="date" name="date" value="{{date}}" required></label>
       </div>
-      <div class="field"><label class="label">Couleur : {{test-color}}<br>
-          <input class="input" type="color" name="color" value="{{description}}" required></label>
+      <div class="field"><label class="label">Couleur : <span class='form-err'>{{test-color}}</span><br><br>
+          <input class="input" type="color" name="color" value="{{color}}" required></label>
       </div>
       <div class="field">
         {{display-themes}}
@@ -43,7 +43,8 @@
     </form>
   </div>
 
-
+  <script src="js/create.js?<?=time()?>"></script>
+  <script src="js/script.js?<?=time()?>"></script>
 </body>
 
 </html>

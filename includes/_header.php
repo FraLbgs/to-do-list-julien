@@ -2,7 +2,7 @@
 try {
     $dbCo = new PDO(
         'mysql:host=localhost;dbname=to_do_list;charset=utf8',
-        'Julien',
+        'Franck',
         'onsenfout'
     );
     $dbCo->setAttribute(

@@ -1,21 +1,11 @@
 <?php
-$ttl = "test";
-require_once "includes/_functions.php";
-try {
-    $dbCo = new PDO(
-        'mysql:host=localhost;dbname=to_do_list;charset=utf8',
-        'Julien',
-        'onsenfout'
-    );
-    $dbCo->setAttribute(
-        PDO::ATTR_DEFAULT_FETCH_MODE,
-        PDO::FETCH_ASSOC
-    );
-} catch (Exception $e) {
-    die("Unable to connect to the database.
-        " . $e->getMessage());
-}
+// $ttl = "test";
+// require_once "includes/_functions.php";
 
+spl_autoload_register();
+use App\Controllers\TaskController;
+
+$apiController = new TaskController();
 
 if (isset($_GET['idtask'])){
     $query = $dbCo->prepare("SELECT priority FROM tasks WHERE id_tasks = :idtasks AND done = 0;");

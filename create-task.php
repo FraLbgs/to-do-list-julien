@@ -34,30 +34,6 @@ $taskAdd = new TaskAdd([
 $taskAdd->display();
 
 
-
-//  <div class="container">
-//   <h2 class="sub-ttl">Veuillez rentrer les données : </h2>
-//   <form class="form" method="post" action="">
-//     <div class="field">
-//       <label class="label">Description : <br>
-//         <input class="input" type="text" name="description" required></label>
-//     </div>
-//     <div class="field"><label class="label">Date de rappel : <br>
-//         <input class="input" type="date" name="date" required></label>
-//     </div>
-//     <div class="field"><label class="label">Couleur : <br>
-//         <input class="input" type="color" name="color" value="#ffffff" required></label>
-//     </div>
-//     <div class="field">
-      
-//     </div>
-//     <div class="field">
-//       <input class="input" type="submit" name="submit" value="Valider les données">
-//     </div>
-//   </form>
-// </div>
-
-
 // $_POST = recursiveStripTags($_POST);
 // var_dump($_POST['theme']);
 

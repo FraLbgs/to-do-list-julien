@@ -20,10 +20,25 @@ class Task extends Model {
                 GROUP BY id_tasks
                 ORDER BY priority;");
         $query->execute();
-        $result = $query->fetchAll();
-        return $result;
+        return $query->fetchAll();
+        
     }
 
+    public static function getMaxPrio() :array {
+        $query = self::$connection->query("SELECT MAX(priority) AS max_prio FROM tasks WHERE id_users = 1;");
+        return $query->fetch();
+    }
+
+    public static function addTask(array $array) :void {
+        $query2 = self::$connection->prepare("INSERT INTO tasks (description, date_reminder, color, priority, id_users) VALUES
+      (:description, :date, :color, :priority, :id);");
+        $query2->execute($array);
+    }
+
+    public static function getLastId(){
+        var_dump(self::$connection->lastInsertId());
+        return self::$connection->lastInsertId();
+    }
     
 }
 
