@@ -10,15 +10,17 @@ if(isset($_GET['action']) && $_GET['action'] === 'create') {
     $controller->create();
     exit;
 } else if (isset($_GET['action']) && $_GET['action'] === 'add') {
-    $controller->checkForm();
-    $controller->store();
-    exit;
+    // $controller->checkForm();
+        $controller->store();
+        exit;
 } else if(isset($_GET['action']) && $_GET['action'] === "done" && isset($_GET['idtask'])){
     $controller->done();
+    exit;
 }
 
 else if(isset($_GET['action']) && $_GET['action'] === "delete" && isset($_GET['idtask'])){
     $controller->destroy();
+    exit;
 }
 
 $controller->index();

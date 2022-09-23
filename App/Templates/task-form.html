@@ -5,13 +5,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Créer une tâche</title>
+  <title>{{title}}</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
   <header class="header">
-    <h1 class="title">{{title}}</h1>
+    <h1 class="title">To Do List</h1>
     <nav>
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link" href='index.php'>Accueil</a></li>
@@ -38,13 +38,16 @@
         {{display-themes}}
       </div>
       <div class="field">
+        <input type="hidden" name="token" value="{{token}}">
+      </div>
+      <div class="field">
         <input class="input" type="submit" name="submit" value="Valider les données">
       </div>
     </form>
   </div>
 
-  <script src="js/create.js?<?=time()?>"></script>
-  <script src="js/script.js?<?=time()?>"></script>
+  <script src="js/create.js?{{time}}"></script>
+  <script src="js/script.js?{{time}}"></script>
 </body>
 
 </html>

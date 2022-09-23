@@ -30,7 +30,7 @@ abstract class View {
 
     // Methods
 
-    public function getContent():string|false {
+    public function getContent():string {
         return file_get_contents($this->getFilename());
     }
 

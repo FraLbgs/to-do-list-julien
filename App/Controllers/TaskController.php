@@ -45,6 +45,8 @@ class TaskController {
 
     public function create() {
         new Theme;
+        session_start();
+        $_SESSION['myToken'] = md5(uniqid(mt_rand(), true));
             $view = new TaskForm([
                 'title' => 'Créer une tâche',
                 'description' => '',
@@ -53,32 +55,35 @@ class TaskController {
                 'test-description' => '',
                 'test-date' => '',
                 'test-color' => '',
-                'display-themes' => self::displayThemes(Theme::askThemes())
+                'display-themes' => self::displayThemes(Theme::askThemes()),
+                'token' => $_SESSION['myToken'],
+                'time' => time()
             ]);
         $view->display();
     }
     
-    public function checkForm() {
-        new Theme;
-        $view = new TaskForm([
-            'title' => 'Créer une tâche',
-            'description' => $_POST['description'],
-            'date' => $_POST['date'],
-            'color' => $_POST['color'],
-            'test-description' => self::testDescription(),
-            'test-date' => self::testDate(),
-            'test-color' => self::testColor(),
-            'display-themes' => self::displayThemes(Theme::askThemes())
-        ]);
-        $view->display();
-    }
+    // public function checkForm() {
+    //     new Theme;
+    //     $view = new TaskForm([
+    //         'title' => 'Créer une tâche',
+    //         'description' => $_POST['description'],
+    //         'date' => $_POST['date'],
+    //         'color' => $_POST['color'],
+    //         'test-description' => self::testDescription(),
+    //         'test-date' => self::testDate(),
+    //         'test-color' => self::testColor(),
+    //         'display-themes' => self::displayThemes(Theme::askThemes())
+    //     ]);
+    //     $view->display();
+    // }
 
     public function displayThemes(array $array):string {
         $themes = "<fieldset id='fieldset'><legend>Choisissez vos thèmes</legend>";
         
         foreach($array as $t){
+            $checked = (isset($_POST['theme']) && in_array($t['id_themes'],$_POST['theme'])) ? 'checked' : '';
             $themes.= "<label>
-            <input type='checkbox' name='theme[]' value='".$t['id_themes']."'>".$t['name_theme']."</label><br/>";
+            <input type='checkbox' name='theme[]' value='".$t['id_themes']."' $checked >".$t['name_theme']."</label><br/>";
         }
         $themes .= "<input id='add-theme' type='text' name='new'> <button type ='button' class='btn-add-theme' id='btn-add-theme'>+</button>";
         
@@ -87,7 +92,7 @@ class TaskController {
     
     
     public function testDescription():string{
-        if (isset($_POST['description']) && strlen($_POST['description']) > 255){
+        if (isset($_POST['description']) && mb_strlen($_POST['description']) > 255){
             return '*La description est trop longue';
         }
         return '';
@@ -111,8 +116,33 @@ class TaskController {
 
 
     public function store(){
+        session_start();
+        // $this->checkForm();
+        if(!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'localhost/TodoListPOO') === false){
+            header('location:index.php?err=referer');
+            exit;
+        }
+        if(!isset($_POST['token']) || !isset($_SESSION['myToken']) || $_POST['token'] !== $_SESSION['myToken']){
+            header('location:index.php?err=csrf');
+            exit;
+        }
         $newTask = new Task;
-        if (isset($_POST['submit']) && self::verifyForm($_POST['description'], $_POST['date'], $_POST['color']) === true && isset($newTask->getMaxPrio()["max_prio"])) {
+        if(!(self::verifyForm())){
+            $view = new TaskForm([
+                'title' => 'Créer une tâche',
+                'description' => $_POST['description'],
+                'date' => $_POST['date'],
+                'color' => $_POST['color'],
+                'test-description' => $this->testDescription(),
+                'test-date' => $this->testDate(),
+                'test-color' => $this->testColor(),
+                'display-themes' => self::displayThemes(Theme::askThemes())
+            ]);
+            $view->display();
+            exit;
+        }
+
+        if (isset($_POST['submit']) && isset($newTask->getMaxPrio()["max_prio"])) {
             if (isset($_POST['color'])) $_POST['color'] = str_replace("#", "", $_POST['color']);
             $newTask->addTask([
                 "description" => strip_tags($_POST['description']),
@@ -130,13 +160,21 @@ class TaskController {
                 }
             }
         }
+        header("location:index.php?action=create");
     }
 
-    public function verifyForm(string $desc, string $date, string $color) :bool{
-        if(mb_strlen($desc) > 255 || $date < date("Y-m-d") || preg_match('/^#[a-f0-9]{6}$/', $color) !== 1){
-          return false;
-        }
-        return true;
+    public function verifyForm() :bool{
+        // if(mb_strlen($desc) > 255 || $date < date("Y-m-d") || preg_match('/^#[a-f0-9]{6}$/', $color) !== 1){
+        //   return false;
+        // }
+        // return true;
+        // new Theme;
+        $test = [];
+        $test['description'] = $this->testDescription();
+        $test['color'] = $this->testColor();
+        $test['date'] = $this->testDate();
+        
+        return ($test['description'] === '' && $test['color'] === '' && $test['date'] === '');
     }
 
     // -------------------------------------------------------------------------------

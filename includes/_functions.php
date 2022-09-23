@@ -79,9 +79,9 @@ function displayThemes(array $array):string {
     return $themes."</fieldset>";
 }
 
-function recursiveStripTags(array|string $var) :array|string {
-  if(!is_array($var)) return strip_tags($var);
-  return array_map("recursiveStripTags", $var);  
-}
+// function recursiveStripTags(array|string $var) :array|string {
+//   if(!is_array($var)) return strip_tags($var);
+//   return array_map("recursiveStripTags", $var);  
+// }
 
 ?>
