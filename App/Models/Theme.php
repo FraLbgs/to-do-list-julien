@@ -13,7 +13,7 @@ class Theme extends Model {
         $query = self::$connection->prepare("INSERT INTO have_theme (id_tasks, id_themes) VALUES
             ($idTask, :idTheme);");
         $query->execute([
-            "idTheme" => intval($idTheme)
+            "idTheme" => $idTheme
         ]);
         return $query->fetchAll();
     }

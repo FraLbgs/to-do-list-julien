@@ -10,7 +10,7 @@ buttonAddTheme.addEventListener('click', function(e){
 
 async function waitingForResponse(string) {
     try {
-        console.log(string);
+        // console.log(string);
         const response = await fetch("action.php?action=add_theme&name_theme="+string);
         const todoList = await response.json();
         console.table(string,todoList);

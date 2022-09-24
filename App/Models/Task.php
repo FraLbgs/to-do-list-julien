@@ -24,9 +24,9 @@ class Task extends Model {
         
     }
 
-    public static function getMaxPrio() :array {
+    public static function getMaxPrio() :int {
         $query = self::$connection->query("SELECT MAX(priority) AS max_prio FROM tasks WHERE id_users = 1;");
-        return $query->fetch();
+        return $query->fetchColumn();
     }
 
     public static function addTask(array $array) :void {
@@ -118,6 +118,34 @@ class Task extends Model {
             $action = "down";
         }
 
+    }
+
+    public static function getTaskInfo() :array {
+        $query = self::$connection->prepare("SELECT description, date_reminder, color FROM tasks WHERE id_tasks =".$_GET['idtask'].";");
+        $query->execute();
+        $result = $query->fetch();
+        $result['color'] = "#".$result['color'];
+        return $result;
+    }
+
+    public static function update(array $array) :void {
+        $query = self::$connection->prepare("UPDATE  tasks
+        SET description = :description, date_reminder = :date, color = :color
+        WHERE id_tasks = :idTask;");
+        $query->execute($array);
+    }
+
+    public static function undone(int $id) :void {
+        $prioMax = self::getMaxPrio($id);
+        $query = self::$connection->prepare("UPDATE tasks
+        SET done = 0, priority = :priority
+        WHERE id_tasks = :idtask;");
+        $isDone = $query->execute([
+        "priority" => $prioMax+1,
+        "idtask" => $id
+        ]);
+
+        $action = "return";
     }
 
 

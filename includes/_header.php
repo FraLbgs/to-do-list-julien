@@ -15,7 +15,7 @@ try {
 }
 ?>
 
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -33,8 +33,7 @@ try {
             <ul class="nav-list">
                 <li class="nav-item"><a class="nav-link" href='index.php'>Accueil</a></li>
                 <li class="nav-item"><a class="nav-link" href='create-task.php'>Créer une tâche</a></li>
-                <li class="nav-item"><a class="nav-link" href='modify.php'>Modifier une tâche</a></li>
                 <li class="nav-item"><a class="nav-link" href='historique.php'>Historique</a></li>
             </ul>
         </nav>
-    </header> -->
+    </header>

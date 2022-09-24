@@ -49,6 +49,7 @@ class TaskController {
         $_SESSION['myToken'] = md5(uniqid(mt_rand(), true));
             $view = new TaskForm([
                 'title' => 'Créer une tâche',
+                'action' => "index.php?action=add",
                 'description' => '',
                 'date' => '',
                 'color' => '',
@@ -94,6 +95,7 @@ class TaskController {
         if(!(self::verifyForm())){
             $view = new TaskForm([
                 'title' => 'Créer une tâche',
+                'action' => "index.php?action=add",
                 'description' => $_POST['description'],
                 'date' => $_POST['date'],
                 'color' => $_POST['color'],
@@ -106,13 +108,13 @@ class TaskController {
             exit;
         }
         
-        if (isset($_POST['submit']) && isset($newTask->getMaxPrio()["max_prio"])) {
+        if (isset($_POST['submit']) && ($newTask->getMaxPrio()) !== null) {
             if (isset($_POST['color'])) $_POST['color'] = str_replace("#", "", $_POST['color']);
             $newTask->addTask([
                 "description" => strip_tags($_POST['description']),
                 "date" => strip_tags($_POST['date']),
                 "color" => strip_tags($_POST['color']),
-                "priority" => intval(strip_tags($newTask->getMaxPrio()["max_prio"]) + 1),
+                "priority" => strip_tags($newTask->getMaxPrio()) + 1,
                 "id" => 1
             ]);
             $idtask =  Task::getLastId();
@@ -125,6 +127,7 @@ class TaskController {
             }
         }
         header("location:index.php?action=create");
+        exit;
     }
     
     public function verifyForm() :bool{
@@ -157,13 +160,6 @@ class TaskController {
     }
 
     // -------------------------------------------------------------------------------
-    
-    // public function getIdTaskPrio(){
-    //     if (isset($_GET['idtask'])){
-    //         $newTask = new Task;
-    //         $newTask->getPrio($_GET['idtask']);
-    //     }
-    // }
 
     public function done() :void {
         if (isset($_GET['idtask'])){
@@ -193,6 +189,70 @@ class TaskController {
         if (isset($_GET['idtask'])){
             $newTask = new Task;
             $newTask->moveDown($_GET['idtask']);
+            header("location:index.php");
+        }
+    }
+
+    public function modify() :void {
+        session_start();
+        $newTask = new Task;
+        $taskInfo = $newTask->getTaskInfo();
+        if(!isset($_POST['submit'])){
+            $view = new TaskForm([
+                'title' => 'Modifier une tâche',
+                'action' => "index.php?action=modify&idtask=".$_GET['idtask'],
+                'description' => $taskInfo['description'],
+                'date' => $taskInfo['date_reminder'],
+                'color' => $taskInfo['color'],
+                'test-description' => '',
+                'test-date' => '',
+                'test-color' => '',
+                'display-themes' => self::displayThemes(Theme::askThemes()),
+                'token' => $_SESSION['myToken'],
+            ]);
+            $view->display();
+            exit;
+        }
+        if(!(self::verifyForm())){
+            $view = new TaskForm([
+                'title' => 'Modifier une tâche',
+                'action' => "index.php?action=modify&idtask=".$_GET['idtask'],
+                'description' => $_POST['description'],
+                'date' => $_POST['date'],
+                'color' => $_POST['color'],
+                'test-description' => $this->testDescription(),
+                'test-date' => $this->testDate(),
+                'test-color' => $this->testColor(),
+                'display-themes' => self::displayThemes(Theme::askThemes())
+            ]);
+            $view->display();
+            exit;
+        }
+        if (isset($_POST['submit']) && isset($_GET['idtask'])){
+            if (isset($_POST['color'])) $_POST['color'] = str_replace("#", "", $_POST['color']);
+            $newTask->update([
+                "description" => strip_tags($_POST['description']),
+                "date" => strip_tags($_POST['date']),
+                "color" => strip_tags($_POST['color']),
+                "idTask" => intval($_GET['idtask'])
+            ]);
+            $idtask =  $_GET['idtask'];
+            $newTheme = new Theme;
+            if (isset($_POST["theme"])) {
+                foreach ($_POST["theme"] as $theme) {
+                    $newTheme->addTheme($theme, $idtask);
+                }
+            }
+            header("location:index.php");
+            exit;
+        }
+
+    }
+
+    public function return() :void {
+        if (isset($_GET['idtask'])){
+            $newTask = new Task;
+            $newTask->undone($_GET['idtask']);
             header("location:index.php");
         }
     }

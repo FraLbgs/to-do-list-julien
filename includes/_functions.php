@@ -31,7 +31,7 @@ function getHtmlFromArrayDone(array $array, string $classUl = null, string $clas
     if ($classLi) $classLi = " class=\"$classLi\"";
     $valueToLi = fn ($v) => "<li$classLi><div class='list-content'>
       <div class='left-content'>
-        <a class='link' href ='action.php?action=return&idtask=".$v['id_tasks']."'><img title='Annuler la validation' class='img-link' src='img/back.png' alt='retour'></a>
+        <a class='link' href ='index.php?action=return&idtask=".$v['id_tasks']."'><img title='Annuler la validation' class='img-link' src='img/back.png' alt='retour'></a>
         <p class='a-voir'>".$v['description']."</p>
       </div>
       <p class='a-voir'>".$v['date_reminder']."</p>

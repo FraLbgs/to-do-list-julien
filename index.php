@@ -10,9 +10,8 @@ if(isset($_GET['action']) && $_GET['action'] === 'create') {
     $controller->create();
     exit;
 } else if (isset($_GET['action']) && $_GET['action'] === 'add') {
-    // $controller->checkForm();
-        $controller->store();
-        exit;
+    $controller->store();
+    exit;
 } else if(isset($_GET['action']) && $_GET['action'] === "done" && isset($_GET['idtask'])){
     $controller->done();
     exit;
@@ -24,6 +23,12 @@ if(isset($_GET['action']) && $_GET['action'] === 'create') {
     exit;
 } else if(isset($_GET['action']) && $_GET['action'] === "down" && isset($_GET['idtask'])){
     $controller->down();
+    exit;
+} else if(isset($_GET['action']) && $_GET['action'] === "modify" && isset($_GET['idtask'])){
+    $controller->modify();
+    exit;
+} else if(isset($_GET['action']) && $_GET['action'] === "return" && isset($_GET['idtask'])){
+    $controller->return();
     exit;
 } 
 
