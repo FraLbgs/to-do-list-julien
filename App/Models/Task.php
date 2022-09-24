@@ -82,6 +82,45 @@ class Task extends Model {
 
         $action = "delete";
     }
+
+    public static function moveUp(int $id):void {
+        $prio = self::getPrio($id);
+        if($prio != 1){
+            $query1 = self::$connection->prepare("UPDATE tasks
+            SET priority = priority-1
+            WHERE priority = $prio AND done = 0;");
+            $isDone = $query1->execute();
+            
+            $query2 = self::$connection->prepare("UPDATE tasks
+            SET priority = priority+1
+            WHERE priority = $prio-1 AND id_tasks != :idtask AND done = 0;");
+            $isDone2 = $query2->execute(["idtask" => $id]);
+        
+            $action = "up";
+        }
+
+    }
+
+    public static function moveDown(int $id):void {
+        $prio = self::getPrio($id);
+        $prioMax = self::getMaxPrio($id);
+        if($prio != $prioMax){
+            $query1 = self::$connection->prepare("UPDATE tasks
+            SET priority = priority+1
+            WHERE priority = $prio AND done = 0;");
+            $isDone = $query1->execute();
+            
+            $query2 = self::$connection->prepare("UPDATE tasks
+            SET priority = priority-1
+            WHERE priority = $prio+1 AND id_tasks != :idtask AND done = 0;");
+            $isDone2 = $query2->execute(["idtask" => $id]);
+        
+            $action = "down";
+        }
+
+    }
+
+
     
 }
 

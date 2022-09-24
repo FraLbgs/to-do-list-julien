@@ -61,21 +61,6 @@ class TaskController {
             ]);
         $view->display();
     }
-    
-    // public function checkForm() {
-    //     new Theme;
-    //     $view = new TaskForm([
-    //         'title' => 'Créer une tâche',
-    //         'description' => $_POST['description'],
-    //         'date' => $_POST['date'],
-    //         'color' => $_POST['color'],
-    //         'test-description' => self::testDescription(),
-    //         'test-date' => self::testDate(),
-    //         'test-color' => self::testColor(),
-    //         'display-themes' => self::displayThemes(Theme::askThemes())
-    //     ]);
-    //     $view->display();
-    // }
 
     public function displayThemes(array $array):string {
         $themes = "<fieldset id='fieldset'><legend>Choisissez vos thèmes</legend>";
@@ -91,30 +76,9 @@ class TaskController {
     }
     
     
-    public function testDescription():string{
-        if (isset($_POST['description']) && mb_strlen($_POST['description']) > 255){
-            return '*La description est trop longue';
-        }
-        return '';
-    }
-
-    public function testDate():string{
-        if (isset($_POST['date']) && $_POST['date'] < date("Y-m-d")){
-            return '*Date déjà dépassée ou non définie';
-        }
-        return '';
-    }
-
-    public function testColor():string{
-        if (isset($_POST['color']) && preg_match('/^#[a-f0-9]{6}$/', $_POST['color']) !== 1){
-            return '*Code hexa invalide';
-        }
-        return '';
-    }
-
-// -------------------------------------------------------------------------------
-
-
+    // -------------------------------------------------------------------------------
+    
+    
     public function store(){
         session_start();
         // $this->checkForm();
@@ -141,7 +105,7 @@ class TaskController {
             $view->display();
             exit;
         }
-
+        
         if (isset($_POST['submit']) && isset($newTask->getMaxPrio()["max_prio"])) {
             if (isset($_POST['color'])) $_POST['color'] = str_replace("#", "", $_POST['color']);
             $newTask->addTask([
@@ -162,31 +126,46 @@ class TaskController {
         }
         header("location:index.php?action=create");
     }
-
+    
     public function verifyForm() :bool{
-        // if(mb_strlen($desc) > 255 || $date < date("Y-m-d") || preg_match('/^#[a-f0-9]{6}$/', $color) !== 1){
-        //   return false;
-        // }
-        // return true;
-        // new Theme;
         $test = [];
         $test['description'] = $this->testDescription();
         $test['color'] = $this->testColor();
         $test['date'] = $this->testDate();
-        
         return ($test['description'] === '' && $test['color'] === '' && $test['date'] === '');
+    }
+
+    public function testDescription():string{
+        if (isset($_POST['description']) && mb_strlen($_POST['description']) > 255){
+            return '*La description est trop longue';
+        }
+        return '';
+    }
+
+    public function testDate():string{
+        if (isset($_POST['date']) && $_POST['date'] < date("Y-m-d")){
+            return '*Date déjà dépassée ou non définie';
+        }
+        return '';
+    }
+
+    public function testColor():string{
+        if (isset($_POST['color']) && preg_match('/^#[a-f0-9]{6}$/', $_POST['color']) !== 1){
+            return '*Code hexa invalide';
+        }
+        return '';
     }
 
     // -------------------------------------------------------------------------------
     
-    public function getIdTaskPrio(){
-        if (isset($_GET['idtask'])){
-            $newTask = new Task;
-            $newTask->getPrio($_GET['idtask']);
-        }
-    }
+    // public function getIdTaskPrio(){
+    //     if (isset($_GET['idtask'])){
+    //         $newTask = new Task;
+    //         $newTask->getPrio($_GET['idtask']);
+    //     }
+    // }
 
-    public function done(){
+    public function done() :void {
         if (isset($_GET['idtask'])){
             $newTask = new Task;
             $newTask->validateTask($_GET['idtask']);
@@ -194,10 +173,26 @@ class TaskController {
         }
     }
 
-    public function destroy(){
+    public function destroy() :void {
         if (isset($_GET['idtask'])){
             $newTask = new Task;
             $newTask->delete($_GET['idtask']);
+            header("location:index.php");
+        }
+    }
+
+    public function up() :void {
+        if (isset($_GET['idtask'])){
+            $newTask = new Task;
+            $newTask->moveUp($_GET['idtask']);
+            header("location:index.php");
+        }
+    }
+
+    public function down() :void {
+        if (isset($_GET['idtask'])){
+            $newTask = new Task;
+            $newTask->moveDown($_GET['idtask']);
             header("location:index.php");
         }
     }

@@ -16,12 +16,16 @@ if(isset($_GET['action']) && $_GET['action'] === 'create') {
 } else if(isset($_GET['action']) && $_GET['action'] === "done" && isset($_GET['idtask'])){
     $controller->done();
     exit;
-}
-
-else if(isset($_GET['action']) && $_GET['action'] === "delete" && isset($_GET['idtask'])){
+} else if(isset($_GET['action']) && $_GET['action'] === "delete" && isset($_GET['idtask'])){
     $controller->destroy();
     exit;
-}
+} else if(isset($_GET['action']) && $_GET['action'] === "up" && isset($_GET['idtask'])){
+    $controller->up();
+    exit;
+} else if(isset($_GET['action']) && $_GET['action'] === "down" && isset($_GET['idtask'])){
+    $controller->down();
+    exit;
+} 
 
 $controller->index();
 
