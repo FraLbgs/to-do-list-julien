@@ -34,10 +34,6 @@ class Task extends Model {
         $query2->execute($array);
     }
 
-    public static function getLastId() :string {
-        return self::$connection->lastInsertId();
-    }
-
     public static function getPrio(int $id) :string {
         // var_dump($array);
         $query = self::$connection->prepare("SELECT priority FROM tasks WHERE id_tasks = :idtask AND done = 0;");
@@ -148,7 +144,7 @@ class Task extends Model {
     }
 
     public static function displayTasksDone() :array {
-        $query = self::$connection->prepare("SELECT description, date_reminder FROM tasks WHERE done = 1 ORDER BY date_reminder;");
+        $query = self::$connection->prepare("SELECT id_tasks, description, date_reminder FROM tasks WHERE done = 1 ORDER BY date_reminder;");
         $query->execute();
         return $query->fetchAll();
     }

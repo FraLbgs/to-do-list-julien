@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Message;
 use App\Models\Task;
 use App\Models\Theme;
 use App\Views\TaskList;
@@ -14,8 +15,10 @@ class TaskController {
 
     public function index() {
         new Task;
+        $message = new Message;
         $view = new TaskList([
-            'taskList' => self::getHtmlFromArrayToDo(Task::displayTasks(), "tasks", "task")
+            'taskList' => self::getHtmlFromArrayToDo(Task::displayTasks(), "tasks", "task"),
+            'message' => isset($_GET['message']) ? $message->get($_GET['message']) : ''
         ]);
         $view->display();
     }
@@ -45,13 +48,15 @@ class TaskController {
 
 // -------------------------------------------------------------------------------
 
-    public function create() {
+    public function create() :void {
         new Theme;
+        $message = new Message;
         session_start();
         $_SESSION['myToken'] = md5(uniqid(mt_rand(), true));
             $view = new TaskForm([
+                'message' => isset($_GET['message']) ? $message->get($_GET['message']) : '',
                 'title' => 'Créer une tâche',
-                'action' => "index.php?action=add",
+                'action' => "index.php?action=add&message=createKO",
                 'description' => '',
                 'date' => '',
                 'color' => '',
@@ -82,8 +87,9 @@ class TaskController {
     // -------------------------------------------------------------------------------
     
     
-    public function store(){
+    public function store() :void {
         session_start();
+        $message = new Message;
         // $this->checkForm();
         if(!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'localhost/TodoListPOO') === false){
             header('location:index.php?err=referer');
@@ -96,6 +102,7 @@ class TaskController {
         $newTask = new Task;
         if(!(self::verifyForm())){
             $view = new TaskForm([
+                'message' => isset($_GET['message']) ? $message->get($_GET['message']) : '',
                 'title' => 'Créer une tâche',
                 'action' => "index.php?action=add",
                 'description' => $_POST['description'],
@@ -104,7 +111,8 @@ class TaskController {
                 'test-description' => $this->testDescription(),
                 'test-date' => $this->testDate(),
                 'test-color' => $this->testColor(),
-                'display-themes' => self::displayThemes(Theme::askThemes())
+                'display-themes' => self::displayThemes(Theme::askThemes()),
+                'token' => $_SESSION['myToken']
             ]);
             $view->display();
             exit;
@@ -124,12 +132,12 @@ class TaskController {
             if (isset($_POST["theme"])) {
                 foreach ($_POST["theme"] as $theme) {
                     var_dump($idtask);
-                    $newTheme->addTheme(intval($theme), $idtask);
+                    $newTheme->linkTaskToTheme(intval($theme), $idtask);
                 }
             }
+            header("location:index.php?action=create&message=createOK");
+            exit;
         }
-        header("location:index.php?action=create");
-        exit;
     }
     
     public function verifyForm() :bool{
@@ -164,10 +172,11 @@ class TaskController {
     // -------------------------------------------------------------------------------
 
     public function done() :void {
+        new Message;
         if (isset($_GET['idtask'])){
             $newTask = new Task;
             $newTask->validateTask($_GET['idtask']);
-            header("location:index.php");
+            header("location:index.php?message=doneOK");
         }
     }
 
@@ -175,7 +184,7 @@ class TaskController {
         if (isset($_GET['idtask'])){
             $newTask = new Task;
             $newTask->delete($_GET['idtask']);
-            header("location:index.php");
+            header("location:index.php?message=suppOK");
         }
     }
 
@@ -199,6 +208,7 @@ class TaskController {
         session_start();
         $newTask = new Task;
         $newTheme = new Theme;
+        $message = new Message;
         $idThemes = [];
         $themeModif = $newTheme->getThemes($_GET['idtask']);
         $taskInfo = $newTask->getTaskInfo($_GET['idtask']);
@@ -211,7 +221,8 @@ class TaskController {
             // var_dump($idThemes);
             $view = new TaskForm([
                 'title' => 'Modifier une tâche',
-                'action' => "index.php?action=modify&idtask=".$_GET['idtask'],
+                'message' => '',
+                'action' => "index.php?action=modify&idtask=".$_GET['idtask']."&message=modifKO",
                 'description' => $taskInfo['description'],
                 'date' => $taskInfo['date_reminder'],
                 'color' => $taskInfo['color'],
@@ -227,6 +238,7 @@ class TaskController {
         if(!(self::verifyForm())){
             $view = new TaskForm([
                 'title' => 'Modifier une tâche',
+                'message' => isset($_GET['message']) ? $message->get($_GET['message']) : '',
                 'action' => "index.php?action=modify&idtask=".$_GET['idtask'],
                 'description' => $_POST['description'],
                 'date' => $_POST['date'],
@@ -251,10 +263,10 @@ class TaskController {
             $newTheme = new Theme;
             if (isset($_POST["theme"])) {
                 foreach ($_POST["theme"] as $theme) {
-                    $newTheme->addTheme($theme, $idtask);
+                    $newTheme->linkTaskToTheme($theme, $idtask);
                 }
             }
-            header("location:index.php");
+            header("location:index.php?message=modifOK");
             exit;
         }
 
@@ -264,7 +276,7 @@ class TaskController {
         if (isset($_GET['idtask'])){
             $newTask = new Task;
             $newTask->undone($_GET['idtask']);
-            header("location:index.php");
+            header("location:index.php?message=returnOK");
         }
     }
 
@@ -279,6 +291,7 @@ class TaskController {
     public static function getHtmlFromArrayDone(array $array) :string {
         $valueToLi = function ($v){
             $taskItemDone = new TaskItemDone([
+                'id_task' => $v['id_tasks'],
                 'description' => $v['description'],
                 'date' => $v['date_reminder']
             ]);

@@ -26,6 +26,10 @@ abstract class Model {
         }
     }
 
+    public static function getLastId() :string {
+        return self::$connection->lastInsertId();
+    }
+
     
 }
 
