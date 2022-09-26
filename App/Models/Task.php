@@ -10,7 +10,6 @@ class Task extends Model {
                          return $query->fetchAll();
     }
 
-
     public static function displayTasks():array {
         $query = self::$connection->prepare("SELECT id_tasks, description, color, date_reminder, GROUP_CONCAT(name_theme) AS themes
                 FROM tasks 
@@ -120,9 +119,9 @@ class Task extends Model {
 
     }
 
-    public static function getTaskInfo() :array {
-        $query = self::$connection->prepare("SELECT description, date_reminder, color FROM tasks WHERE id_tasks =".$_GET['idtask'].";");
-        $query->execute();
+    public static function getTaskInfo(int $id) :array {
+        $query = self::$connection->prepare("SELECT description, date_reminder, color FROM tasks WHERE id_tasks = :idtask;");
+        $query->execute(["idtask" => $id]);
         $result = $query->fetch();
         $result['color'] = "#".$result['color'];
         return $result;
@@ -136,7 +135,7 @@ class Task extends Model {
     }
 
     public static function undone(int $id) :void {
-        $prioMax = self::getMaxPrio($id);
+        $prioMax = self::getMaxPrio();
         $query = self::$connection->prepare("UPDATE tasks
         SET done = 0, priority = :priority
         WHERE id_tasks = :idtask;");
@@ -148,6 +147,11 @@ class Task extends Model {
         $action = "return";
     }
 
+    public static function displayTasksDone() :array {
+        $query = self::$connection->prepare("SELECT description, date_reminder FROM tasks WHERE done = 1 ORDER BY date_reminder;");
+        $query->execute();
+        return $query->fetchAll();
+    }
 
     
 }

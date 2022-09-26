@@ -6,12 +6,14 @@ use App\Models\Task;
 use App\Models\Theme;
 use App\Views\TaskList;
 use App\Views\TaskForm;
+use App\Views\TaskHistory;
 use App\Views\TaskItem;
+use App\Views\TaskItemDone;
 
 class TaskController {
 
     public function index() {
-        $task = new Task;
+        new Task;
         $view = new TaskList([
             'taskList' => self::getHtmlFromArrayToDo(Task::displayTasks(), "tasks", "task")
         ]);
@@ -63,13 +65,13 @@ class TaskController {
         $view->display();
     }
 
-    public function displayThemes(array $array):string {
+    public function displayThemes(array $themesList, array $idthemes = null):string {
         $themes = "<fieldset id='fieldset'><legend>Choisissez vos thèmes</legend>";
-        
-        foreach($array as $t){
+        foreach($themesList as $t){
             $checked = (isset($_POST['theme']) && in_array($t['id_themes'],$_POST['theme'])) ? 'checked' : '';
+            $checkedModify = ($idthemes !== null && (in_array($t['id_themes'],$idthemes))) ? 'checked' : '';
             $themes.= "<label>
-            <input type='checkbox' name='theme[]' value='".$t['id_themes']."' $checked >".$t['name_theme']."</label><br/>";
+            <input type='checkbox' name='theme[]' value='".$t['id_themes']."' $checked $checkedModify >".$t['name_theme']."</label><br/>";
         }
         $themes .= "<input id='add-theme' type='text' name='new'> <button type ='button' class='btn-add-theme' id='btn-add-theme'>+</button>";
         
@@ -196,8 +198,17 @@ class TaskController {
     public function modify() :void {
         session_start();
         $newTask = new Task;
-        $taskInfo = $newTask->getTaskInfo();
+        $newTheme = new Theme;
+        $idThemes = [];
+        $themeModif = $newTheme->getThemes($_GET['idtask']);
+        $taskInfo = $newTask->getTaskInfo($_GET['idtask']);
         if(!isset($_POST['submit'])){
+            if(sizeof($themeModif) !== 0){
+                foreach($themeModif as $theme){
+                    $idThemes[] = $theme['id_themes'];
+                }
+            }
+            // var_dump($idThemes);
             $view = new TaskForm([
                 'title' => 'Modifier une tâche',
                 'action' => "index.php?action=modify&idtask=".$_GET['idtask'],
@@ -207,7 +218,7 @@ class TaskController {
                 'test-description' => '',
                 'test-date' => '',
                 'test-color' => '',
-                'display-themes' => self::displayThemes(Theme::askThemes()),
+                'display-themes' => self::displayThemes(Theme::askThemes(), $idThemes),
                 'token' => $_SESSION['myToken'],
             ]);
             $view->display();
@@ -257,6 +268,24 @@ class TaskController {
         }
     }
 
+    public function displayHistory() :void {
+        new Task;
+        $view = new TaskHistory([
+            'taskList' => self::getHtmlFromArrayDone(Task::displayTasksDone())
+        ]);
+        $view->display();
+    }
+
+    public static function getHtmlFromArrayDone(array $array) :string {
+        $valueToLi = function ($v){
+            $taskItemDone = new TaskItemDone([
+                'description' => $v['description'],
+                'date' => $v['date_reminder']
+            ]);
+            return $taskItemDone->getHtml();
+        };
+        return "<ul class='done-ul'>" . implode("", array_map($valueToLi, $array)) . "</ul>";
+    }
 
 }
 

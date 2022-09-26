@@ -30,6 +30,9 @@ if(isset($_GET['action']) && $_GET['action'] === 'create') {
 } else if(isset($_GET['action']) && $_GET['action'] === "return" && isset($_GET['idtask'])){
     $controller->return();
     exit;
+} else if(isset($_GET['action']) && $_GET['action'] === "history"){
+    $controller->displayHistory();
+    exit;
 } 
 
 $controller->index();

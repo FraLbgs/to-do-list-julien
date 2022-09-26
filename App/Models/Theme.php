@@ -18,6 +18,12 @@ class Theme extends Model {
         return $query->fetchAll();
     }
 
+    public static function getThemes(int $id) :array {
+        $query = self::$connection->query("SELECT id_themes FROM have_theme
+            WHERE id_tasks = $id;");
+        return $query->fetchAll();
+    }
+
 }
 
 
